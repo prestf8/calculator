@@ -1,0 +1,87 @@
+ 
+CurrentOperation <- {
+						FirstOperand: "",
+						SecondOperand: "",
+						Operator: "",
+					}
+
+DisplayValue <- ""
+OperatorStage <- FALSE
+
+WHENEVER CLEAR button is pressed:
+	OperatorStage <- FALSE
+	DisplayValue <- ""
+	FirstOperand <- ""
+	Operator <- ""
+ENDFUNCTION
+
+WHENEVER number buttons are pressed:
+	IF OperatorStage:
+		DisplayValue <- ""
+		OperatorStage <- FALSE
+	DisplayValue += GET number
+ENDFUNCTION
+
+WHENEVER Operator buttons are pressed:
+	IF DisplayValue none: 
+		RETURN
+	ENDIF
+
+	IF Operator && OperatorStage: 
+		Operator = GET Operator 
+		RETURN
+	ENDIF
+
+	OperatorStage <- TRUE
+	
+	IF (!FirstOperand):
+		FirstOperand <- DisplayValue
+		Operator <- GET Operator
+	ELSE:
+		SetupOperation()
+		Operator <- GET Operator
+	ENDIF
+ENDFUNCTION
+
+WHENEVER equal Operator button is pressed:
+	IF FirstOperand is none: RETURN
+	ELSE:
+		SetupOperation()
+		Operator <- ""
+	ENDIF
+ENDFUNCTION
+	
+FUNCTION UpdateDisplay():
+	DisplayValue <- FirstOperand
+ENDFUNCTION
+
+FUNCTION SetupOperation():
+		SecondOperand <- DisplayValue
+		FirstOperand <- Operate()
+		UpdateDisplay()
+		SecondOperand <- ""
+ENDFUNCTION
+
+FUNCTION Operate():
+	SWITCH Operator:
+		"+": RETURN Add()
+		"-": RETURN Subtract()
+		"/": RETURN Divide()
+		"*": RETURN Multiply()
+ENDFUNCTION
+
+FUNCTION Add():
+	RETURN FirstOperand + SecondOperand
+ENDFUNCTION
+
+FUNCTION Subtract():
+	RETURN FirstOperand - SecondOperand
+ENDFUNCTION
+
+FUNCTION Divide():
+	RETURN FLOOR(FirstOperand / SecondOperand)
+ENDFUNCTION
+
+FUNCTION Multiply():
+	RETURN FirstOperand * SecondOperand
+ENDFUNCTION

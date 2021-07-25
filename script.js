@@ -15,20 +15,14 @@ const operatorKeys = Array.from(
 const equalsKey = document.getElementById("equals");
 const backspaceKey = document.getElementById("backspace");
 
+document.addEventListener("keydown", function (e) {
+  const numberKeysAvail = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+  if (numberKeysAvail.includes(e.key)) pressClickNumber(e.key);
+});
+
 numberKeys.forEach((numberKey) =>
   numberKey.addEventListener("click", function (e) {
-    if (currentOperation.firstOperand === "tf are you doing") return;
-    if (operatorStage) {
-      displayValue = "";
-      operatorStage = false;
-    }
-
-    if (displayValue.length <= 9) {
-      displayValue += e.target.textContent;
-      updateDisplay();
-    }
-    console.log(displayValue);
-    console.log(currentOperation);
+    pressClickNumber(e.target.textContent);
   })
 );
 
@@ -82,14 +76,25 @@ equalsKey.addEventListener("click", function () {
   if (!currentOperation.firstOperand || !currentOperation.operator) return;
   setupOperation();
   currentOperation.operator = "";
-  console.log(currentOperation);
-  console.log(displayValue);
 });
 
 backspaceKey.addEventListener("click", function () {
   displayValue = displayValue.substring(0, displayValue.length - 1);
   updateDisplay();
 });
+
+function pressClickNumber(number) {
+  if (currentOperation.firstOperand === "tf are you doing") return;
+  if (operatorStage) {
+    displayValue = "";
+    operatorStage = false;
+  }
+
+  if (displayValue.length <= 9) {
+    displayValue += number;
+    updateDisplay();
+  }
+}
 
 function updateDisplay() {
   const display = document.getElementById("display");

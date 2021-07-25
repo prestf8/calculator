@@ -36,12 +36,12 @@ clearKey.addEventListener("click", function () {
 });
 
 operatorKeys.forEach((operatorKey) =>
-  operatorKey.addEventListener("click", function () {
+  operatorKey.addEventListener("click", function (e) {
+    const operator = e.target.textContent;
     if (!displayValue) return;
 
-    currentOperation.operator = operatorKeys.textContent; // all of the cases below update operator
-
     if (currentOperation.operator && operatorStage) {
+      currentOperation.operator = operator; // all of the cases below update operator
       return;
     }
 
@@ -49,8 +49,10 @@ operatorKeys.forEach((operatorKey) =>
 
     if (!currentOperation.firstOperand) {
       currentOperation.firstOperand = displayValue;
+      currentOperation.operator = operator;
     } else {
       setupOperation();
+      currentOperation.operator = operator;
     }
   })
 );
@@ -62,37 +64,46 @@ function updateDisplay() {
 
 function setupOperation() {
   currentOperation.secondOperand = displayValue;
-  currentOperation.firstOperand = operate();
+  currentOperation.firstOperand = String(operate()); // do the operation with numbers but store as string (to keep data consistent)
   displayValue = currentOperation.firstOperand;
   currentOperation.secondOperand = "";
+  updateDisplay();
 }
 
 function operate() {
   switch (currentOperation.operator) {
     case "+":
       return add();
-      break;
     case "-":
       return subtract();
-      break;
     case "/":
       return divide();
-      break;
     case "*":
       return multiply();
-      break;
   }
 }
 
 function add() {
-  return currentOperation.firstOperand + currentOperation.secondOperand;
+  return (
+    parseFloat(currentOperation.firstOperand) +
+    parseFloat(currentOperation.secondOperand)
+  );
 }
 function subtract() {
-  return currentOperation.firstOperand - currentOperation.secondOperand;
+  return (
+    parseFloat(currentOperation.firstOperand) -
+    parseFloat(currentOperation.secondOperand)
+  );
 }
 function divide() {
-  return currentOperation.firstOperand / currentOperation.secondOperand;
+  return (
+    parseFloat(currentOperation.firstOperand) /
+    parseFloat(currentOperation.secondOperand)
+  );
 }
 function multiply() {
-  return currentOperation.firstOperand * currentOperation.secondOperand;
+  return (
+    parseFloat(currentOperation.firstOperand) *
+    parseFloat(currentOperation.secondOperand)
+  );
 }

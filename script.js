@@ -16,7 +16,19 @@ const equalsKey = document.getElementById("equals");
 const backspaceKey = document.getElementById("backspace");
 
 document.addEventListener("keydown", function (e) {
-  const numberKeysAvail = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+  const numberKeysAvail = [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "0",
+    ".",
+  ];
   const operatorKeysAvail = ["+", "-", "/", "*", "%"];
   if (numberKeysAvail.includes(e.key)) pressClickNumber(e.key);
   else if (operatorKeysAvail.includes(e.key)) pressClickOperator(e.key);

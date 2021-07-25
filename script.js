@@ -21,6 +21,7 @@ document.addEventListener("keydown", function (e) {
   if (numberKeysAvail.includes(e.key)) pressClickNumber(e.key);
   else if (operatorKeysAvail.includes(e.key)) pressClickOperator(e.key);
   else if (e.key === "=" || e.key === "Enter") pressClickEqual();
+  else if (e.key === "Backspace") pressClickBackspace();
 });
 
 numberKeys.forEach((numberKey) =>
@@ -53,10 +54,7 @@ operatorKeys.forEach((operatorKey) =>
 
 equalsKey.addEventListener("click", pressClickEqual);
 
-backspaceKey.addEventListener("click", function () {
-  displayValue = displayValue.substring(0, displayValue.length - 1);
-  updateDisplay();
-});
+backspaceKey.addEventListener("click", pressClickBackspace);
 
 function pressClickNumber(number) {
   if (currentOperation.firstOperand === "tf are you doing") return;
@@ -102,6 +100,11 @@ function pressClickEqual() {
   if (!currentOperation.firstOperand || !currentOperation.operator) return;
   setupOperation();
   currentOperation.operator = "";
+}
+
+function pressClickBackspace() {
+  displayValue = displayValue.substring(0, displayValue.length - 1);
+  updateDisplay();
 }
 
 function updateDisplay() {

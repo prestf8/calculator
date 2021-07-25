@@ -17,7 +17,10 @@ const backspaceKey = document.getElementById("backspace");
 
 document.addEventListener("keydown", function (e) {
   const numberKeysAvail = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+  const operatorKeysAvail = ["+", "-", "/", "*", "%"];
   if (numberKeysAvail.includes(e.key)) pressClickNumber(e.key);
+  else if (operatorKeysAvail.includes(e.key)) pressClickOperator(e.key);
+  else if (e.key === "=" || e.key === "Enter") pressClickEqual();
 });
 
 numberKeys.forEach((numberKey) =>
@@ -36,29 +39,7 @@ clearKey.addEventListener("click", function () {
 
 operatorKeys.forEach((operatorKey) =>
   operatorKey.addEventListener("click", function (e) {
-    if (currentOperation.firstOperand === "tf are you doing") return;
-
-    const operator = e.target.textContent;
-    if (!displayValue) return;
-
-    if (currentOperation.operator && operatorStage) {
-      currentOperation.operator = operator; // all of the cases below update operator
-      return;
-    }
-
-    operatorStage = true;
-
-    if (!currentOperation.firstOperand) {
-      currentOperation.firstOperand = displayValue;
-      currentOperation.operator = operator;
-    } else if (currentOperation.firstOperand && !currentOperation.operator) {
-      // for the case when user presses operator after equals key
-      currentOperation.firstOperand = displayValue;
-      currentOperation.operator = operator;
-    } else {
-      setupOperation();
-      currentOperation.operator = operator;
-    }
+    pressClickOperator(e.target.textContent);
   })
 );
 
@@ -70,13 +51,7 @@ operatorKeys.forEach((operatorKey) =>
 // 	ENDIF
 // ENDFUNCTION
 
-equalsKey.addEventListener("click", function () {
-  if (currentOperation.firstOperand === "tf are you doing") return;
-
-  if (!currentOperation.firstOperand || !currentOperation.operator) return;
-  setupOperation();
-  currentOperation.operator = "";
-});
+equalsKey.addEventListener("click", pressClickEqual);
 
 backspaceKey.addEventListener("click", function () {
   displayValue = displayValue.substring(0, displayValue.length - 1);
@@ -94,6 +69,39 @@ function pressClickNumber(number) {
     displayValue += number;
     updateDisplay();
   }
+}
+
+function pressClickOperator(operator) {
+  if (currentOperation.firstOperand === "tf are you doing") return;
+
+  if (!displayValue) return;
+
+  if (currentOperation.operator && operatorStage) {
+    currentOperation.operator = operator; // all of the cases below update operator
+    return;
+  }
+
+  operatorStage = true;
+
+  if (!currentOperation.firstOperand) {
+    currentOperation.firstOperand = displayValue;
+    currentOperation.operator = operator;
+  } else if (currentOperation.firstOperand && !currentOperation.operator) {
+    // for the case when user presses operator after equals key
+    currentOperation.firstOperand = displayValue;
+    currentOperation.operator = operator;
+  } else {
+    setupOperation();
+    currentOperation.operator = operator;
+  }
+}
+
+function pressClickEqual() {
+  if (currentOperation.firstOperand === "tf are you doing") return;
+
+  if (!currentOperation.firstOperand || !currentOperation.operator) return;
+  setupOperation();
+  currentOperation.operator = "";
 }
 
 function updateDisplay() {

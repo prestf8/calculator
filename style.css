@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
-
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
 :root {
   --color-body-bg: #ffd448;
   --color-calculator-bg: rgb(37, 37, 37);
@@ -43,6 +43,13 @@ body {
   margin: 0 auto;
   background: var(--color-display-bg);
   border-radius: 10px;
+  padding: 1rem;
+  font-size: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: white;
+  font-family: "Roboto Mono", sans-serif;
 }
 
 /* KEYS */

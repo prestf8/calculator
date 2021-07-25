@@ -13,9 +13,11 @@ const operatorKeys = Array.from(
   document.getElementsByClassName("operator-key")
 );
 const equalsKey = document.getElementById("equals");
+const backspaceKey = document.getElementById("backspace");
 
 numberKeys.forEach((numberKey) =>
   numberKey.addEventListener("click", function (e) {
+    if (currentOperation.firstOperand === "tf are you doing") return;
     if (operatorStage) {
       displayValue = "";
       operatorStage = false;
@@ -40,6 +42,8 @@ clearKey.addEventListener("click", function () {
 
 operatorKeys.forEach((operatorKey) =>
   operatorKey.addEventListener("click", function (e) {
+    if (currentOperation.firstOperand === "tf are you doing") return;
+
     const operator = e.target.textContent;
     if (!displayValue) return;
 
@@ -73,11 +77,18 @@ operatorKeys.forEach((operatorKey) =>
 // ENDFUNCTION
 
 equalsKey.addEventListener("click", function () {
-  if (!currentOperation.firstOperand) return;
+  if (currentOperation.firstOperand === "tf are you doing") return;
+
+  if (!currentOperation.firstOperand || !currentOperation.operator) return;
   setupOperation();
   currentOperation.operator = "";
   console.log(currentOperation);
   console.log(displayValue);
+});
+
+backspaceKey.addEventListener("click", function () {
+  displayValue = displayValue.substring(0, displayValue.length - 1);
+  updateDisplay();
 });
 
 function updateDisplay() {
@@ -87,7 +98,7 @@ function updateDisplay() {
 
 function setupOperation() {
   currentOperation.secondOperand = displayValue;
-  currentOperation.firstOperand = String(operate()); // do the operation with numbers but store as string (to keep data consistent)
+  currentOperation.firstOperand = operate(); // do the operation with numbers but store as string (to keep data consistent)
   displayValue = currentOperation.firstOperand;
   currentOperation.secondOperand = "";
   updateDisplay();
@@ -103,30 +114,47 @@ function operate() {
       return divide();
     case "*":
       return multiply();
+    case "%":
+      return mod();
   }
 }
 
 function add() {
-  return (
+  const result =
     parseFloat(currentOperation.firstOperand) +
-    parseFloat(currentOperation.secondOperand)
-  );
+    parseFloat(currentOperation.secondOperand);
+  return filterResult(result);
 }
 function subtract() {
-  return (
+  const result =
     parseFloat(currentOperation.firstOperand) -
-    parseFloat(currentOperation.secondOperand)
-  );
+    parseFloat(currentOperation.secondOperand);
+  return filterResult(result);
 }
 function divide() {
-  return Math.round(
+  if (currentOperation.secondOperand === "0") return "tf are you doing";
+  const result =
     parseFloat(currentOperation.firstOperand) /
-      parseFloat(currentOperation.secondOperand)
-  );
+    parseFloat(currentOperation.secondOperand);
+
+  return filterResult(result);
 }
 function multiply() {
-  return Math.round(
+  const result =
     parseFloat(currentOperation.firstOperand) *
-      parseFloat(currentOperation.secondOperand)
-  );
+    parseFloat(currentOperation.secondOperand);
+
+  return filterResult(result);
+}
+
+function mod() {
+  const result =
+    parseFloat(currentOperation.firstOperand) %
+    parseFloat(currentOperation.secondOperand);
+  return filterResult(result);
+}
+
+function filterResult(result) {
+  if (String(result).length > 9) return result.toFixed(2);
+  else return result;
 }

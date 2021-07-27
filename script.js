@@ -96,11 +96,8 @@ function pressClickOperator(operator) {
 
   operatorStage = true;
 
-  if (!currentOperation.firstOperand) {
-    currentOperation.firstOperand = displayValue;
-    currentOperation.operator = operator;
-  } else if (currentOperation.firstOperand && !currentOperation.operator) {
-    // for the case when user presses operator after equals key
+  if (!currentOperation.firstOperand || !currentOperation.operator) {
+    // case for when no operations had been made || making operation after pressing 'equals'
     currentOperation.firstOperand = displayValue;
     currentOperation.operator = operator;
   } else {

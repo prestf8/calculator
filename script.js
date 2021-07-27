@@ -38,7 +38,8 @@ document.addEventListener("keydown", function (e) {
 
 numberKeys.forEach((numberKey) =>
   numberKey.addEventListener("click", function (e) {
-    pressClickNumber(e.target.textContent);
+    const numberOrDot = e.target.textContent;
+    pressClickNumber(numberOrDot);
   })
 );
 
@@ -70,6 +71,8 @@ backspaceKey.addEventListener("click", pressClickBackspace);
 
 function pressClickNumber(number) {
   if (currentOperation.firstOperand === "tf are you doing") return;
+  if (number === "." && displayValue.includes(".")) return;
+
   if (operatorStage) {
     displayValue = "";
     operatorStage = false;

@@ -183,6 +183,13 @@ function mod() {
 }
 
 function filterResult(result) {
-  if (String(result).length > 9) return result.toFixed(2);
-  else return result;
+  let modifiedResult = result;
+
+  if (String(modifiedResult).length > 9) {
+    modifiedResult = modifiedResult.toExponential();
+  }
+  if (String(result).includes(".") && String(result).split(".")[1].length > 2) {
+    modifiedResult = Math.round(result * 100) / 100;
+  }
+  return modifiedResult;
 }
